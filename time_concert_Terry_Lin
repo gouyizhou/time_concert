@@ -1,0 +1,95 @@
+# !/usr/bin/env python
+# -*-coding:utf-8-*-
+# date :2023/3/29 14:41
+# author:Sabo
+import os
+
+
+
+# 林志炫的格式化转换函数
+def time_concert_format_of_Terry_lin(input_mp4_name):
+    return input_mp4_name.split("(")[-1].split(")")[0].split(".")[0]
+
+# 视频转换音频 ffmpeg格式命令
+def video_to_music(input_mp4_name, outpurt_mp3_name, delete_flag):
+    commond = "ffmpeg -i " + input_mp4_name.__str__() + " -vn " + outpurt_mp3_name.__str__()
+    print("commond:", commond)
+    os.system(commond)
+    if delete_flag:
+        os.remove(input_mp4_name)
+        print("{File} removed successfully".format(File = input_mp4_name.split("P")[-1]))
+
+    # print("commond:", commond)
+
+def choose_mp4_file(list_of_video):
+    result_list = []
+    for i in range(list_of_video.__len__()):
+        if list_of_video[i].split(".")[-1] == "mp4":
+            result_list.append(list_of_video[i])
+    return result_list
+
+
+
+
+def main(origin_site, singer, delete_flag):
+    list_of_video = os.listdir(origin_site)
+    mp4_list = choose_mp4_file(list_of_video)
+    for i in range(mp4_list.__len__()):
+        output_mp3_name = ""
+        # print(list_of_video[i])
+        # all_name =
+        input_mp4_name = mp4_list[i]
+        print(input_mp4_name)
+        # input()
+        output_mp3_name = time_concert_format_of_Terry_lin(input_mp4_name)
+        output_mp3_name += "-{singer_name}.mp3".format(singer_name = singer)
+        print("output_mp3_name : {output_mp3_name}".format(output_mp3_name=output_mp3_name))
+        print("input_mp4_name : {input_mp4_name}".format(input_mp4_name=input_mp4_name))
+        video_to_music(origin_site+"\\"+input_mp4_name, origin_site+"\\"+output_mp3_name, delete_flag)
+
+def format_files(origin_site, dst_dir):
+    files_list = os.listdir(origin_site)
+    for i in range(files_list.__len__()):
+        file_temp = files_list[i]
+        print("file_temp", file_temp)
+        if file_temp == dst_dir:
+            continue
+        else:
+            dst_file_name = file_temp.__str__().strip().strip(" ").replace(" ", "").strip("【").strip("】")
+            # print("dst_file_name", dst_file_name)
+            os.rename(origin_site + "\\" + file_temp, origin_site + "\\" + dst_dir + "\\" + dst_file_name)
+            pass
+
+def check_path(folder):
+    """
+        检查输入的路径的文件夹是否存在，存在则不进行操作，否则创建相关的文件夹。
+    """
+    try:
+        if not os.path.exists(folder):
+            dir_name = folder.split("/")[-1]
+            print("《{dir_name}》already existed! ".format(dir_name = dir_name))
+            os.mkdir(folder)
+    except:
+        pass
+    else:
+        print("This dir already existed, finish!")
+
+if __name__ == '__main__':
+    origin_site =r"F:\b站音乐\test"
+    singer_name = "林志炫"
+    dst_dir = "already"
+    delete_flag = True
+    dst_site = origin_site+"\\"+dst_dir
+    format_files(origin_site, dst_dir)
+    # check_path(origin_site)
+    # check_path(dst_dir)
+    main(dst_site, singer_name, delete_flag)
+    '''
+        结果： already
+            单身情歌).mp4
+            奢香夫人).mp4
+            你的样子).mp4
+    '''
+    # os.system()
+
+
